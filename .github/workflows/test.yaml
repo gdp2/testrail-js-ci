@@ -4,9 +4,7 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -16,3 +14,11 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
+      - run: trcli -y \
+    -h TESETRAIL_HOST \
+    --project env.PROJECT_NAME \
+    --username env.TESTRAIL_USER \
+    --password ${{ secrets.TESTRAIL_PASS }} \
+    parse_junit \
+    --title "Automated Tests Run" \
+    -f junit.xml
