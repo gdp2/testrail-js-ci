@@ -18,9 +18,9 @@ jobs:
       - run: pip3 install trcli
       - run: |
                 trcli -y \
-                -h env.TESETRAIL_HOST \
-                --project env.PROJECT_NAME \
-                --username env.TESTRAIL_USER \
+                -h ${{ env.TESETRAIL_HOST}} \
+                --project ${{ env.PROJECT_NAME}} \
+                --username ${{ env.TESTRAIL_USER}} \
                 --password ${{ secrets.TESTRAIL_PASS }} \
                 parse_junit \
                 --title "Automated Tests Run" \
