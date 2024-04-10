@@ -14,8 +14,12 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
-      - run: pip3 install trcli
-      - run: |
+      - name: Install Test rail cli
+        if: always()
+        run: pip3 install trcli
+      - name: Upload to testrail
+        if: always()
+        run: |
                 trcli -y \
                 -h ${{ vars.TESETRAIL_HOST}} \
                 --project ${{ vars.PROJECT_NAME}} \
