@@ -17,14 +17,36 @@ jobs:
       - name: Install Test rail cli
         if: always()
         run: pip3 install trcli
-      - name: Upload to testrail
-        if: always()
-        run: |
-                trcli -y \
-                -h ${{ vars.TESETRAIL_HOST}} \
-                --project ${{ vars.PROJECT_NAME}} \
-                --username ${{ vars.TESTRAIL_USER}} \
-                --password "${{ secrets.TESTRAIL_PASS }}" \
-                parse_junit \
-                --title "Automated Tests Run" \
-                -f junit.xml
+      - run: |
+            curl --location 'https://${{vars.DYNATRACE_BASE_URL}}/api/v2/events/ingest' \
+            --header 'Authorization: Api-Token ${{secrets.DYNATRACE_API_KEY}}' \
+            --header 'Content-Type: application/json' \
+            --data '{
+            "eventType": "CUSTOM_DEPLOYMENT",
+            "title": "Easytravel 1.1",
+            "entitySelector": "type(APPLICATION)",
+            "properties": {
+                "dt.event.deployment.name":"Easytravel 1.1",
+                "dt.event.deployment.version": "1.1",
+                "dt.event.deployment.release_stage": "production" ,
+                "dt.event.deployment.release_product": "frontend",
+                "dt.event.deployment.release_build_version": "123",
+                "approver": "Jason Miller",
+                "dt.event.deployment.ci_back_link": "https://pipelines/easytravel/123",
+                "gitcommit": "e5a6baac7eb",
+                "change-request": "CR-42",
+                "dt.event.deployment.remediation_action_link": "https://url.com",
+                "dt.event.is_rootcause_relevant": true
+            }
+            }'
+      # - name: Upload to testrail
+      #   if: always()
+      #   run: |
+      #           trcli -y \
+      #           -h ${{ vars.TESETRAIL_HOST}} \
+      #           --project ${{ vars.PROJECT_NAME}} \
+      #           --username ${{ vars.TESTRAIL_USER}} \
+      #           --password "${{ secrets.TESTRAIL_PASS }}" \
+      #           parse_junit \
+      #           --title "Automated Tests Run" \
+      #           -f junit.xml
