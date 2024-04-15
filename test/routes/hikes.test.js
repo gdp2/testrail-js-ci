@@ -13,7 +13,7 @@ describe('Hikes Route Tests', () => {
 
   test('/hikes should return a list of hikes', async () => {
     const response = await request(app).get("/hikes");
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(200);
     expect(response.body.hikes.length).toBe(3);
   });
 
