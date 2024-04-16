@@ -36,7 +36,7 @@ jobs:
             "properties": {
               "dt.event.deployment.name":"Mercury Web",
               "dt.event.deployment.version": "${{ steps.app_version_output.outputs.APP_VERSION }}",
-              "dt.event.deployment.release_stage": "${{ inputs.environment }}" ,
+              "dt.event.deployment.release_stage": "${{ inputs.environment }}-env" ,
               "dt.event.deployment.release_product": "mercury-web",
               "dt.event.deployment.release_build_version": "${{ steps.vars.outputs.sha_short }}",
               "dt.event.deployment.ci_back_link": "https://github.com/${{github.repository }}/actions/runs/${{ github.run_id }}",
