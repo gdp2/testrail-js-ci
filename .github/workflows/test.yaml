@@ -17,40 +17,14 @@ jobs:
       - name: Install Test rail cli
         if: always()
         run: pip3 install trcli
-      - name: build the app version
-        id: app_version_output
-        shell: bash
+      - name: Upload to testrail
+        if: always()
         run: |
-          echo "APP_VERSION=$(cat package.json | jq -r .version)" >> $GITHUB_OUTPUT
-      - name: Set github sha
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - run: |
-            curl --location 'https://${{vars.DYNATRACE_BASE_URL}}/api/v2/events/ingest' \
-            --header 'Authorization: Api-Token ${{secrets.DYNATRACE_API_KEY}}' \
-            --header 'Content-Type: application/json' \
-            --data '{
-            "eventType": "CUSTOM_DEPLOYMENT",
-            "title": "Mercury",
-            "entitySelector": "type(APPLICATION)",
-            "properties": {
-              "dt.event.deployment.name":"Mercury Web",
-              "dt.event.deployment.version": "${{ steps.app_version_output.outputs.APP_VERSION }}",
-              "dt.event.deployment.release_stage": "${{ inputs.environment }}-env" ,
-              "dt.event.deployment.release_product": "mercury-web",
-              "dt.event.deployment.release_build_version": "${{ steps.vars.outputs.sha_short }}",
-              "dt.event.deployment.ci_back_link": "https://github.com/${{github.repository }}/actions/runs/${{ github.run_id }}",
-              "gitcommit": "${{ steps.vars.outputs.sha_short }}"
-              }
-              }'
-      # - name: Upload to testrail
-      #   if: always()
-      #   run: |
-      #           trcli -y \
-      #           -h ${{ vars.TESETRAIL_HOST}} \
-      #           --project ${{ vars.PROJECT_NAME}} \
-      #           --username ${{ vars.TESTRAIL_USER}} \
-      #           --password "${{ secrets.TESTRAIL_PASS }}" \
-      #           parse_junit \
-      #           --title "Automated Tests Run" \
-      #           -f junit.xml
+                trcli -y \
+                -h ${{ vars.TESETRAIL_HOST}} \
+                --project ${{ vars.PROJECT_NAME}} \
+                --username ${{ vars.TESTRAIL_USER}} \
+                --password "${{ secrets.TESTRAIL_PASS }}" \
+                parse_junit \
+                --title "Automated Tests Run" \
+                -f junit.xml
