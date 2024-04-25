@@ -31,7 +31,7 @@ describe('Hikes Route Tests', () => {
     expect(response.body.photos.length).toBe(2);
   });
   
-  test('confirm hike time ranges used during getPhotosDuringHike()', async () => {
+  test('confirm hike time ranges used during getPhotosDuringHike() increased the string length to test the testrial automatin id for test test test test test test test test test test test test test test test test test test test test test test test test test test test test test' , async () => {
     
     jest.resetAllMocks();
 
